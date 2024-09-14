@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Event Form with Address Auto-Complete</title>
+    <title>Custom Event Form with Address and Business Name Auto-Complete</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
     <script>
         function initAutocomplete() {
             var autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('eventLocation'), 
-                
+                document.getElementById('eventLocation')
             );
         }
 
-        // Function to show or hide the time fields
         function toggleTimeFields() {
             var allDay = document.getElementById('allDay').value;
             var timeFields = document.getElementById('timeFields');
@@ -23,6 +21,11 @@
             } else {
                 timeFields.style.display = 'block'; // Show time fields
             }
+        }
+
+        function setEndDate() {
+            var startDate = document.getElementById('startDate').value;
+            document.getElementById('endDate').value = startDate; // Set end date to the start date
         }
     </script>
     <style>
@@ -56,6 +59,13 @@
         #timeFields {
             display: block;
         }
+        .date-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .date-container input {
+            width: 48%;
+        }
     </style>
 </head>
 <body onload="initAutocomplete()">
@@ -63,6 +73,7 @@
     <form id="eventForm">
         <label for="eventWho">Who's Event</label>
         <select id="eventWho" required>
+            <option value="" disabled selected>Select person</option>
             <option value="Kelly">Kelly</option>
             <option value="Nick">Nick</option>
             <option value="Melanie">Melanie</option>
@@ -73,6 +84,7 @@
 
         <label for="eventType">Event Type</label>
         <select id="eventType" required>
+            <option value="" disabled selected>Select event type</option>
             <option value="Kids Activity">Kids Activity</option>
             <option value="Medical">Medical</option>
             <option value="Professional">Professional</option>
@@ -82,11 +94,20 @@
         <label for="eventTitle">Event Title</label>
         <input type="text" id="eventTitle" required>
 
-        <label for="eventDate">Date of Event</label>
-        <input type="date" id="eventDate" required>
+        <div class="date-container">
+            <div>
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" required onchange="setEndDate()">
+            </div>
+            <div>
+                <label for="endDate">End Date</label>
+                <input type="date" id="endDate" required>
+            </div>
+        </div>
 
         <label for="allDay">All day?</label>
         <select id="allDay" onchange="toggleTimeFields()" required>
+            <option value="" disabled selected>Select option</option>
             <option value="No">No</option>
             <option value="Yes">Yes</option>
         </select>
@@ -94,7 +115,7 @@
         <div id="timeFields">
             <label for="startTime">Start Time</label>
             <select id="startTime" required>
-                <!-- Add time options from 5am in 30-minute increments -->
+                <option value="" disabled selected>Select start time</option>
                 <script>
                     for (let h = 5; h < 24; h++) {
                         let hour = h > 12 ? h - 12 : h;
@@ -109,7 +130,7 @@
 
             <label for="endTime">End Time</label>
             <select id="endTime" required>
-                <!-- Same time options for end time -->
+                <option value="" disabled selected>Select end time</option>
                 <script>
                     for (let h = 5; h < 24; h++) {
                         let hour = h > 12 ? h - 12 : h;
@@ -124,7 +145,7 @@
         </div>
 
         <label for="eventLocation">Event Location</label>
-        <input type="text" id="eventLocation" placeholder="Enter location" required>
+        <input type="text" id="eventLocation" placeholder="Enter location or business name" required>
 
         <label for="eventDetails">Additional Details / Notes</label>
         <textarea id="eventDetails"></textarea>
