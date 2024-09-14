@@ -88,4 +88,48 @@
         <label for="allDay">All day?</label>
         <select id="allDay" onchange="toggleTimeFields()" required>
             <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
 
+        <div id="timeFields">
+            <label for="startTime">Start Time</label>
+            <select id="startTime" required>
+                <!-- Add time options from 5am in 30-minute increments -->
+                <script>
+                    for (let h = 5; h < 24; h++) {
+                        let hour = h > 12 ? h - 12 : h;
+                        let ampm = h >= 12 ? 'PM' : 'AM';
+                        let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
+                        let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
+                        document.write(option1);
+                        document.write(option2);
+                    }
+                </script>
+            </select>
+
+            <label for="endTime">End Time</label>
+            <select id="endTime" required>
+                <!-- Same time options for end time -->
+                <script>
+                    for (let h = 5; h < 24; h++) {
+                        let hour = h > 12 ? h - 12 : h;
+                        let ampm = h >= 12 ? 'PM' : 'AM';
+                        let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
+                        let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
+                        document.write(option1);
+                        document.write(option2);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <label for="eventLocation">Event Location</label>
+        <input type="text" id="eventLocation" placeholder="Enter location" required>
+
+        <label for="eventDetails">Additional Details / Notes</label>
+        <textarea id="eventDetails"></textarea>
+
+        <button type="submit">Submit Event</button>
+    </form>
+</body>
+</html>
