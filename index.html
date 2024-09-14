@@ -4,59 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Event Form with Multi-Select and Date Handling</title>
+    
+    <!-- Include Choices.js Library for Multi-Select Dropdown -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
     <script>
-        function initAutocomplete() {
-            var autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('eventLocation')
-            );
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const eventWhoChoices = new Choices('#eventWho', {
+                removeItemButton: true,
+                shouldSort: false,
+                placeholder: true,
+                placeholderValue: 'Select people',
+                searchEnabled: false
+            });
 
-        // Handle the "All Day" and Time Fields
-        function toggleTimeFields() {
-            var allDay = document.getElementById('allDay').value;
-            var timeFields = document.getElementById('timeFields');
-
-            if (allDay === 'Yes') {
-                timeFields.style.display = 'none'; // Hide time fields
-            } else {
-                timeFields.style.display = 'block'; // Show time fields
+            // Initialize Google Places API Autocomplete
+            var autocomplete;
+            function initAutocomplete() {
+                autocomplete = new google.maps.places.Autocomplete(document.getElementById('eventLocation'));
             }
-        }
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
 
-        // Set the end date to the start date by default and handle the "All Day" option
-        function setEndDate() {
-            var startDate = document.getElementById('startDate').value;
-            document.getElementById('endDate').value = startDate;
-            handleMultiDayEvent();
-        }
+            // Set the end date to the start date by default and handle the "All Day" option
+            document.getElementById('startDate').addEventListener('change', function () {
+                document.getElementById('endDate').value = this.value;
+                handleMultiDayEvent();
+            });
 
-        // Handle multi-day events by hiding "All Day" option if multi-day
-        function handleMultiDayEvent() {
-            var startDate = new Date(document.getElementById('startDate').value);
-            var endDate = new Date(document.getElementById('endDate').value);
-            var allDayContainer = document.getElementById('allDayContainer');
+            // Handle multi-day events by hiding "All Day" option if multi-day
+            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
 
-            if (endDate > startDate) {
-                allDayContainer.style.display = 'none';  // Hide "All Day?" if multi-day
-            } else {
-                allDayContainer.style.display = 'block'; // Show "All Day?" if single-day
+            function handleMultiDayEvent() {
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+                const allDayContainer = document.getElementById('allDayContainer');
+
+                if (endDate > startDate) {
+                    allDayContainer.style.display = 'none';  // Hide "All Day?" if multi-day
+                } else {
+                    allDayContainer.style.display = 'block'; // Show "All Day?" if single-day
+                }
             }
-        }
 
-        // Get selected people in the correct order
-        function getOrderedPeople() {
-            const selectedPeople = Array.from(document.getElementById('eventWho').selectedOptions).map(opt => opt.value);
-            const orderedPeople = ['Kelly', 'Nick', 'Melanie', 'Natalie', 'Nicky', 'Michaela'].filter(person => selectedPeople.includes(person));
-            return orderedPeople.join(', ');
-        }
-
-        // Submit the form and display selected people in correct order
-        function submitForm() {
-            const orderedPeople = getOrderedPeople();
-            alert('Selected People (in order): ' + orderedPeople);  // Display selected names in order (can be replaced with form submission logic)
-        }
+            // Handle "All Day" and Time Fields Toggle
+            document.getElementById('allDay').addEventListener('change', function () {
+                const timeFields = document.getElementById('timeFields');
+                if (this.value === 'Yes') {
+                    timeFields.style.display = 'none';
+                } else {
+                    timeFields.style.display = 'block';
+                }
+            });
+        });
     </script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -95,30 +98,20 @@
         .date-container div {
             margin-bottom: 10px;
         }
-        .multiselect-dropdown {
-            display: flex;
-            flex-direction: column;
-            overflow: auto;
-        }
-        .multiselect-dropdown select {
-            height: auto;
-        }
     </style>
 </head>
-<body onload="initAutocomplete()">
+<body>
     <h3>Event Submission Form</h3>
-    <form id="eventForm" onsubmit="submitForm(); return false;">
+    <form id="eventForm">
         <label for="eventWho">Who's Event</label>
-        <div class="multiselect-dropdown">
-            <select id="eventWho" multiple required>
-                <option value="Kelly">Kelly</option>
-                <option value="Nick">Nick</option>
-                <option value="Melanie">Melanie</option>
-                <option value="Natalie">Natalie</option>
-                <option value="Nicky">Nicky</option>
-                <option value="Michaela">Michaela</option>
-            </select>
-        </div>
+        <select id="eventWho" multiple required>
+            <option value="Kelly">Kelly</option>
+            <option value="Nick">Nick</option>
+            <option value="Melanie">Melanie</option>
+            <option value="Natalie">Natalie</option>
+            <option value="Nicky">Nicky</option>
+            <option value="Michaela">Michaela</option>
+        </select>
 
         <label for="eventType">Event Type</label>
         <select id="eventType" required>
@@ -135,17 +128,17 @@
         <div class="date-container">
             <div>
                 <label for="startDate">Start Date</label>
-                <input type="date" id="startDate" required onchange="setEndDate()">
+                <input type="date" id="startDate" required>
             </div>
             <div>
                 <label for="endDate">End Date</label>
-                <input type="date" id="endDate" required onchange="handleMultiDayEvent()">
+                <input type="date" id="endDate" required>
             </div>
         </div>
 
         <div id="allDayContainer">
             <label for="allDay">All day?</label>
-            <select id="allDay" onchange="toggleTimeFields()" required>
+            <select id="allDay" required>
                 <option value="" disabled selected>Select option</option>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
