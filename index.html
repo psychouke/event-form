@@ -23,9 +23,24 @@
             }
         }
 
+        // Function to set the end date to the same as the start date by default
         function setEndDate() {
             var startDate = document.getElementById('startDate').value;
-            document.getElementById('endDate').value = startDate; // Set end date to the start date
+            document.getElementById('endDate').value = startDate;
+        }
+
+        // Function to get selected people in correct order
+        function getOrderedPeople() {
+            const selectedPeople = Array.from(document.getElementById('eventWho').selectedOptions).map(opt => opt.value);
+            const orderedPeople = ['Kelly', 'Nick', 'Melanie', 'Natalie', 'Nicky', 'Michaela'].filter(person => selectedPeople.includes(person));
+            return orderedPeople.join(', ');
+        }
+
+        // Function to submit the form and display selected people in correct order
+        function submitForm() {
+            const orderedPeople = getOrderedPeople();
+            alert('Selected People (in order): ' + orderedPeople);  // This is where you'd handle form submission or event creation
+            // Additional form submission logic can be added here, e.g., sending data to your backend
         }
     </script>
     <style>
@@ -61,19 +76,18 @@
         }
         .date-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
         }
-        .date-container input {
-            width: 48%;
+        .date-container div {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body onload="initAutocomplete()">
     <h3>Event Submission Form</h3>
-    <form id="eventForm">
+    <form id="eventForm" onsubmit="submitForm(); return false;">
         <label for="eventWho">Who's Event</label>
-        <select id="eventWho" required>
-            <option value="" disabled selected>Select person</option>
+        <select id="eventWho" multiple required>
             <option value="Kelly">Kelly</option>
             <option value="Nick">Nick</option>
             <option value="Melanie">Melanie</option>
