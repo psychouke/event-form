@@ -21,7 +21,6 @@
         const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
         const SCOPES = "https://www.googleapis.com/auth/calendar.events";
 
-        // Initialize Google API client
         function handleClientLoad() {
             gapi.load('client:auth2', initClient);
         }
@@ -41,8 +40,8 @@
 
         function createEvent() {
             const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
-            const startDate = document.getElementById('startDate').value + 'T09:00:00';  // Set start time
-            const endDate = document.getElementById('endDate').value + 'T17:00:00';  // Set end time
+            const startDate = document.getElementById('startDate').value + 'T09:00:00';
+            const endDate = document.getElementById('endDate').value + 'T17:00:00';
 
             var event = {
                 'summary': eventTitle,
@@ -58,7 +57,7 @@
             };
 
             var request = gapi.client.calendar.events.insert({
-                'calendarId': 'primary',  // Customize the calendar ID if needed
+                'calendarId': 'primary',
                 'resource': event
             });
 
@@ -67,26 +66,39 @@
             });
         }
 
-        // Auto-fill End Date with Start Date
         function setEndDate() {
             const startDate = document.getElementById('startDate').value;
             document.getElementById('endDate').value = startDate;
         }
 
-        // Hide All Day option if multi-day event
         function handleMultiDayEvent() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             const allDayContainer = document.getElementById('allDayContainer');
+            const startTimeLabel = document.getElementById('startTimeLabel');
+            const endTimeLabel = document.getElementById('endTimeLabel');
 
             if (endDate > startDate) {
-                allDayContainer.style.display = 'none';  // Hide "All Day?" if multi-day
+                allDayContainer.style.display = 'none';
+                startTimeLabel.innerText = "Start Time (First Day)";
+                endTimeLabel.innerText = "End Time (Last Day)";
             } else {
-                allDayContainer.style.display = 'block'; // Show "All Day?" if single-day
+                allDayContainer.style.display = 'block';
+                startTimeLabel.innerText = "Start Time";
+                endTimeLabel.innerText = "End Time";
             }
         }
 
-        // Multi-select logic for Who's Event
+        function handleAllDayChange() {
+            const allDay = document.getElementById('allDay').value;
+            const timeFields = document.getElementById('timeFields');
+            if (allDay === "Yes") {
+                timeFields.style.display = 'none';
+            } else {
+                timeFields.style.display = 'block';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const eventWhoChoices = new Choices('#eventWho', {
                 removeItemButton: true,
@@ -96,11 +108,9 @@
                 searchEnabled: false
             });
 
-            // Auto-fill End Date when Start Date is selected
             document.getElementById('startDate').addEventListener('change', setEndDate);
-
-            // Hide "All Day" when it's a multi-day event
             document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
+            document.getElementById('allDay').addEventListener('change', handleAllDayChange);
         });
     </script>
 
@@ -183,7 +193,7 @@
             <option value="Family">Family</option>
             <option value="House Work">House Work</option>
             <option value="Dance">Dance</option>
-            <option value="Other">Other</option> <!-- New options added -->
+            <option value="Other">Other</option>
         </select>
 
         <label for="eventTitle">Event Title</label>
@@ -210,7 +220,7 @@
         </div>
 
         <div id="timeFields">
-            <label for="startTime">Start Time</label>
+            <label for="startTime" id="startTimeLabel">Start Time</label>
             <select id="startTime" required>
                 <option value="" disabled selected>Select start time</option>
                 <script>
@@ -224,27 +234,7 @@
                     }
                 </script>
             </select>
-
-            <label for="endTime">End Time</label>
-            <select id="endTime" required>
-                <option value="" disabled selected>Select end time</option>
-                <script>
-                    for (let h = 5; h < 24; h++) {
-                        let hour = h > 12 ? h - 12 : h;
-                        let ampm = h >= 12 ? 'PM' : 'AM';
-                        let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
-                        let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
-                        document.write(option1);
-                        document.write(option2);
-                    }
-                </script>
-            </select>
         </div>
-
-        <label for="eventLocation">Event Location</label>
-        <input type="text" id="eventLocation" placeholder="Enter location or business name" required>
-
-        <label for="eventDetails">Additional Details / Notes</label>
-        <textarea id="eventDetails"></textarea>
-
-        <button
+    </form>
+</body>
+</html>
