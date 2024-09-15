@@ -66,11 +66,13 @@
             });
         }
 
+        // Auto-fill End Date with Start Date
         function setEndDate() {
             const startDate = document.getElementById('startDate').value;
             document.getElementById('endDate').value = startDate;
         }
 
+        // Hide All Day option if multi-day event and update time labels
         function handleMultiDayEvent() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
@@ -99,6 +101,7 @@
             }
         }
 
+        // Multi-select logic for Who's Event
         document.addEventListener('DOMContentLoaded', function () {
             const eventWhoChoices = new Choices('#eventWho', {
                 removeItemButton: true,
@@ -233,8 +236,29 @@
                         document.write(option2);
                     }
                 </script>
-            </select>
-        </div>
-    </form>
+             </select>
+
+        <label for="endTime" id="endTimeLabel">End Time</label>
+        <select id="endTime" required>
+            <option value="" disabled selected>Select end time</option>
+            <script>
+                for (let h = 5; h < 24; h++) {
+                    let hour = h > 12 ? h - 12 : h;
+                    let ampm = h >= 12 ? 'PM' : 'AM';
+                    let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
+                    let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
+                    document.write(option1);
+                    document.write(option2);
+                }
+            </script>
+        </select>
+    </div>
+
+    <label for="eventLocation">Event Location</label>
+    <input type="text" id="eventLocation" required>
+
+    <button type="submit" onclick="handleClientLoad()">Submit</button>
+</form>
+
 </body>
 </html>
