@@ -3,81 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Event Form with Multi-Select and Date Handling</title>
-    
-    <!-- Include Choices.js Library for Multi-Select Dropdown -->
+    <title>Event Form with Google Calendar Integration</title>
+
+    <!-- Include Choices.js Library -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
+    <!-- Include Google Client Library for Google Calendar API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+
+    <!-- Include Google Maps API Library with your API Key -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const eventWhoChoices = new Choices('#eventWho', {
-                removeItemButton: true,
-                shouldSort: false,
-                placeholder: true,
-                placeholderValue: 'Select people',
-                searchEnabled: false
+        const CLIENT_ID = '1046959611110-dtpbkhn3eud2bq7c0kesijj054jact8o.apps.googleusercontent.com';  // Replace with your OAuth 2.0 Client ID
+        const API_KEY = 'AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg';            // Replace with your Google API Key
+        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+        const SCOPES = "https://www.googleapis.com/auth/calendar.events";
+
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: DISCOVERY_DOCS,
+                scope: SCOPES
+            }).then(() => {
+                gapi.auth2.getAuthInstance().signIn().then(() => {
+                    createEvent();
+                });
             });
+        }
 
-            // Initialize Google Places API Autocomplete
-            var autocomplete;
-            function initAutocomplete() {
-                autocomplete = new google.maps.places.Autocomplete(document.getElementById('eventLocation'));
-            }
-            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+        function createEvent() {
+            const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
+            const startDate = document.getElementById('startDate').value + 'T09:00:00';  // Set start time
+            const endDate = document.getElementById('endDate').value + 'T17:00:00';  // Set end time
 
-            // Set the end date to the start date by default and handle the "All Day" option
-            document.getElementById('startDate').addEventListener('change', function () {
-                document.getElementById('endDate').value = this.value;
-                handleMultiDayEvent();
-            });
-
-            // Handle multi-day events by hiding "All Day" option if multi-day
-            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
-
-            function handleMultiDayEvent() {
-                const startDate = new Date(document.getElementById('startDate').value);
-                const endDate = new Date(document.getElementById('endDate').value);
-                const allDayContainer = document.getElementById('allDayContainer');
-
-                if (endDate > startDate) {
-                    allDayContainer.style.display = 'none';  // Hide "All Day?" if multi-day
-                } else {
-                    allDayContainer.style.display = 'block'; // Show "All Day?" if single-day
+            var event = {
+                'summary': eventTitle,
+                'location': document.getElementById('eventLocation').value,
+                'start': {
+                    'dateTime': startDate,
+                    'timeZone': 'America/New_York'
+                },
+                'end': {
+                    'dateTime': endDate,
+                    'timeZone': 'America/New_York'
                 }
-            }
+            };
 
-            // Handle "All Day" and Time Fields Toggle
-            document.getElementById('allDay').addEventListener('change', function () {
-                const timeFields = document.getElementById('timeFields');
-                if (this.value === 'Yes') {
-                    timeFields.style.display = 'none';
-                } else {
-                    timeFields.style.display = 'block';
-                }
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',  // Customize the calendar ID if needed
+                'resource': event
             });
-        });
+
+            request.execute((event) => {
+                alert('Event created: ' + event.htmlLink);
+            });
+        }
     </script>
-    
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         form {
-            width: 300px;
+            width: 100%;
+            max-width: 600px;
             margin: 0 auto;
         }
+
         label {
             font-weight: bold;
         }
+
         input, select, textarea {
             width: 100%;
             padding: 8px;
             margin: 8px 0;
             box-sizing: border-box;
         }
+
         button {
             padding: 10px;
             background-color: #4CAF50;
@@ -85,18 +97,29 @@
             border: none;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #45a049;
         }
-        #timeFields, #allDayContainer {
-            display: block;
-        }
+
         .date-container {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
         }
+
         .date-container div {
-            margin-bottom: 10px;
+            width: 48%;
+        }
+
+        @media (max-width: 600px) {
+            .date-container {
+                flex-direction: column;
+            }
+
+            .date-container div {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -120,6 +143,7 @@
             <option value="Medical">Medical</option>
             <option value="Professional">Professional</option>
             <option value="Family">Family</option>
+            <option value="House Work">House Work</option>
         </select>
 
         <label for="eventTitle">Event Title</label>
