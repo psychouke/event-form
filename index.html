@@ -21,101 +21,70 @@
         const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
         const SCOPES = "https://www.googleapis.com/auth/calendar.events";
 
-        function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
-        }
+           function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+    }
 
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            }).then(() => {
-                gapi.auth2.getAuthInstance().signIn().then(() => {
-                    createEvent();
-                });
+    function initClient() {
+        gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        }).then(() => {
+            gapi.auth2.getAuthInstance().signIn().then(() => {
+                createEvent();
             });
-        }
-
-        function createEvent() {
-            const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
-            const startDate = document.getElementById('startDate').value + 'T09:00:00';
-            const endDate = document.getElementById('endDate').value + 'T17:00:00';
-
-            var event = {
-                'summary': eventTitle,
-                'location': document.getElementById('eventLocation').value,
-                'start': {
-                    'dateTime': startDate,
-                    'timeZone': 'America/New_York'
-                },
-                'end': {
-                    'dateTime': endDate,
-                    'timeZone': 'America/New_York'
-                }
-            };
-
-            var request = gapi.client.calendar.events.insert({
-                'calendarId': 'primary',
-                'resource': event
-            });
-
-            request.execute((event) => {
-                alert('Event created: ' + event.htmlLink);
-            });
-        }
-
-        // Auto-fill End Date with Start Date
-        function setEndDate() {
-            const startDate = document.getElementById('startDate').value;
-            document.getElementById('endDate').value = startDate;
-        }
-
-        // Hide All Day option if multi-day event and update time labels
-        function handleMultiDayEvent() {
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            const allDayContainer = document.getElementById('allDayContainer');
-            const startTimeLabel = document.getElementById('startTimeLabel');
-            const endTimeLabel = document.getElementById('endTimeLabel');
-
-            if (endDate > startDate) {
-                allDayContainer.style.display = 'none';
-                startTimeLabel.innerText = "Start Time (First Day)";
-                endTimeLabel.innerText = "End Time (Last Day)";
-            } else {
-                allDayContainer.style.display = 'block';
-                startTimeLabel.innerText = "Start Time";
-                endTimeLabel.innerText = "End Time";
-            }
-        }
-
-        function handleAllDayChange() {
-            const allDay = document.getElementById('allDay').value;
-            const timeFields = document.getElementById('timeFields');
-            if (allDay === "Yes") {
-                timeFields.style.display = 'none';
-            } else {
-                timeFields.style.display = 'block';
-            }
-        }
-
-        // Multi-select logic for Who's Event
-        document.addEventListener('DOMContentLoaded', function () {
-            const eventWhoChoices = new Choices('#eventWho', {
-                removeItemButton: true,
-                shouldSort: false,
-                placeholder: true,
-                placeholderValue: 'Select people',
-                searchEnabled: false
-            });
-
-            document.getElementById('startDate').addEventListener('change', setEndDate);
-            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
-            document.getElementById('allDay').addEventListener('change', handleAllDayChange);
         });
-    </script>
+    }
+
+    // Updated createEvent function
+    function createEvent() {
+        const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
+        const startDate = document.getElementById('startDate').value + 'T09:00:00';
+        const endDate = document.getElementById('endDate').value + 'T17:00:00';
+        const eventLocation = document.getElementById('eventLocation').value;
+        const eventNotes = document.getElementById('eventNotes').value;
+        const eventType = document.getElementById('eventType').value;
+
+        // Map event types to their respective calendar IDs
+        const calendarMapping = {
+            'Dance': '13dc90dafcf166ac6f8f0d7c67ca0d8a5016ae2cde7b7f50d8ddc10627fe5df6@group.calendar.google.com',
+            'Family': 'family08661693261563540417@group.calendar.google.com',
+            'House Work': '4c10bc8c44eb879686129e295b3e8e0741061e218c9c684822146cc6b10a899a@group.calendar.google.com',
+            'Kids Activity': 'a159d131f3c528548b7ffab0997eebb01b6d541ab3645f69ec2ad130b807db7d@group.calendar.google.com',
+            'Medical': '3c0cffcb1eedd4589b4a4fa83a9196aa5f36929692e7c51099304299b7540660@group.calendar.google.com',
+            'Other': '0e67d6c7f100b788dc2f86b3d17fe15fb73bb9f4308482c231ccc2f2e7510e21@group.calendar.google.com',
+            'Professional': '7f7316bcfa34c9f1adf75e09db3b21ca96e7efdeb2c6ac78fd7fb5ccca7edff5@group.calendar.google.com'
+        };
+
+        // Get the correct calendar ID based on the event type
+        const calendarId = calendarMapping[eventType];
+
+        var event = {
+            'summary': eventTitle,
+            'location': eventLocation,
+            'description': eventNotes,
+            'start': {
+                'dateTime': startDate,
+                'timeZone': 'America/New_York'
+            },
+            'end': {
+                'dateTime': endDate,
+                'timeZone': 'America/New_York'
+            }
+        };
+
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': calendarId,  // Target the correct calendar
+            'resource': event
+        });
+
+        request.execute(function(event) {
+            alert('Event created: ' + event.htmlLink);
+        });
+    }
+</script>
 
     <style>
         body {
