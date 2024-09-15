@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Form with Google Calendar Integration</title>
+    <title>Calendar Event Entry with Google Calendar Integration</title>
 
     <!-- Include Choices.js Library for Multi-Select -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
@@ -162,7 +162,7 @@
     </style>
 </head>
 <body>
-    <h3>Event Submission Form</h3>
+    <h3>Calendar Event Entry</h3>
     <form id="eventForm">
         <label for="eventWho">Who's Event</label>
         <select id="eventWho" multiple required>
@@ -182,6 +182,8 @@
             <option value="Professional">Professional</option>
             <option value="Family">Family</option>
             <option value="House Work">House Work</option>
+            <option value="Dance">Dance</option>
+            <option value="Other">Other</option> <!-- New options added -->
         </select>
 
         <label for="eventTitle">Event Title</label>
@@ -240,4 +242,9 @@
         </div>
 
         <label for="eventLocation">Event Location</label>
-        <input type="text" id="event
+        <input type="text" id="eventLocation" placeholder="Enter location or business name" required>
+
+        <label for="eventDetails">Additional Details / Notes</label>
+        <textarea id="eventDetails"></textarea>
+
+        <button
