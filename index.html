@@ -152,21 +152,28 @@
             background-color: #45a049;
         }
 
-        .date-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
+       .date-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
 
-        .date-container div {
-            width: 48%;
-        }
+.date-container div {
+    width: 48%;
+}
 
-        @media (max-width: 600px) {
-            .date-container {
-                flex-direction: column;
-                gap: 10px;
-            }
+/* Remove this media query so the fields remain side by side on mobile */
+@media (max-width: 600px) {
+    .date-container {
+        flex-direction: row; /* This should stay 'row' instead of 'column' for mobile */
+        gap: 10px;
+    }
+
+    .date-container div {
+        width: 48%; /* Ensures both fields stay side by side */
+    }
+}
+
 
             .date-container div {
                 width: 100%;
