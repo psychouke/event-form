@@ -69,45 +69,6 @@ label {
 }
 
 /* Dropdown Styling for Multi-Select */
-.choices__list--multiple .choices__item {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    display: block;
-}
-
-.choices__list--dropdown .choices__item--selectable {
-    display: flex;
-    align-items: center;
-    background-color: #3c3c3c;
-    color: #f0f0f0;
-    padding: 8px;
-}
-
-.choices__list--dropdown .choices__item--selectable:hover {
-    background-color: #555;
-    color: #f0f0f0;
-}
-
-.choices__list--dropdown .choices__item--selectable::before {
-    content: '';
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    border: 1px solid #f0f0f0;
-    border-radius: 3px;
-    background-color: transparent;
-}
-
-.choices__list--dropdown .choices__item--selectable.choices__item--selected::before {
-    content: '\2714';
-    background-color: #4CAF50;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /* Dark Mode Dropdown Styling */
 .choices__inner {
   background-color: #333;
@@ -117,12 +78,33 @@ label {
 
 .choices__list--dropdown .choices__item--selectable {
   color: #fff;
+  background-color: #444; /* Ensures better contrast */
 }
 
+.choices__list--dropdown .choices__item.is-highlighted {
+  background-color: #666;
+  color: #fff;
+}
+
+.choices__list--dropdown .choices__item:hover {
+  background-color: #555; /* For better hover visibility */
+  color: #fff;
+}
+
+/* Selected items styling (make them inline and on the same row) */
 .choices__list--multiple .choices__item {
   background-color: #4CAF50;
   color: #fff;
+  display: inline-block; /* Makes names appear inline */
+  margin: 2px 5px;
+  padding: 5px 10px;
   border-radius: 3px;
+}
+
+/* Remove spacing after the selected items to prevent wrapping too soon */
+.choices__list--multiple {
+  flex-wrap: nowrap;
+  white-space: normal; /* Keeps selected items in the same line */
 }
 
 .choices__list--multiple .choices__item[data-item][data-deletable] {
@@ -130,14 +112,18 @@ label {
   color: #fff;
 }
 
-.choices__list--dropdown .choices__item:hover,
-.choices__list--dropdown .choices__item.is-highlighted {
-  background-color: #666;
-  color: #fff;
+/* Styling for checkboxes */
+.choices__list--dropdown .choices__item::before {
+  content: "\2713"; /* Unicode checkmark */
+  color: #4CAF50;
+  display: inline-block;
+  margin-right: 8px;
 }
 
+/* Input placeholder styling */
 .choices__input {
   color: #fff;
+  background-color: #444;
 }
 
 
