@@ -16,18 +16,19 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
 
 <style>
+/* Dark Mode and Dropdown Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #1c1c1c; /* Dark background */
-    color: #f0f0f0; /* Light text */
+    background-color: #1c1c1c;
+    color: #f0f0f0;
 }
 
 form {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    background-color: #2b2b2b; /* Slightly lighter than the background */
+    background-color: #2b2b2b;
     padding: 20px;
     border-radius: 10px;
 }
@@ -61,22 +62,49 @@ label {
     color: #f0f0f0;
 }
 
-/* Simplified Selection Style for 'Who's Event' */
-.choices__item--selectable {
-    display: inline; /* Removes the large rounded rectangle style */
+/* Dropdown Styling for Multi-Select */
+.choices__list--multiple .choices__item {
     background-color: transparent;
-    color: #f0f0f0; /* Same text color as the rest of the form */
     border: none;
     padding: 0;
+    display: block;
 }
 
-.choices__list--multiple .choices__item {
-    display: none; /* Hides the large items */
+.choices__list--dropdown .choices__item--selectable {
+    display: flex;
+    align-items: center;
+    background-color: #3c3c3c;
+    color: #f0f0f0;
+    padding: 8px;
 }
 
 .choices__list--dropdown .choices__item--selectable:hover {
-    background-color: #555; /* Hover effect in dark mode */
+    background-color: #555;
     color: #f0f0f0;
+}
+
+.choices__list--dropdown .choices__item--selectable::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 3px;
+    background-color: transparent;
+}
+
+.choices__list--dropdown .choices__item--selectable.choices__item--selected::before {
+    content: '\2714';
+    background-color: #4CAF50;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dark Mode Dropdown Styling */
+.choices__list--dropdown {
+    background-color: #2b2b2b;
 }
 
 .date-container {
@@ -100,11 +128,6 @@ label {
     }
 }
 
-/* Additional adjustments for drop-down in dark mode */
-.choices__list--dropdown .choices__item--selectable {
-    background-color: #3c3c3c;
-    color: #f0f0f0;
-}
     </style>
 
 
