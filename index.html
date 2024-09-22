@@ -103,30 +103,37 @@ label {
 }
 
 /* Dark Mode Dropdown Styling */
-.choices__list--dropdown {
-    background-color: #2b2b2b;
+.choices__inner {
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
 }
 
-.date-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+.choices__list--dropdown .choices__item--selectable {
+  color: #fff;
 }
 
-.date-container div {
-    width: 48%;
+.choices__list--multiple .choices__item {
+  background-color: #4CAF50;
+  color: #fff;
+  border-radius: 3px;
 }
 
-@media (max-width: 600px) {
-    .date-container {
-        flex-direction: row;
-        gap: 10px;
-    }
-
-    .date-container div {
-        width: 48%;
-    }
+.choices__list--multiple .choices__item[data-item][data-deletable] {
+  background-color: #4CAF50;
+  color: #fff;
 }
+
+.choices__list--dropdown .choices__item:hover,
+.choices__list--dropdown .choices__item.is-highlighted {
+  background-color: #666;
+  color: #fff;
+}
+
+.choices__input {
+  color: #fff;
+}
+
 
     </style>
 
