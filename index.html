@@ -139,20 +139,21 @@ button:hover {
         }
 
         // Initialize Google Places Autocomplete when the document is loaded
-       document.addEventListener('DOMContentLoaded', function () {
+      <script>
+  document.addEventListener('DOMContentLoaded', function () {
     const eventWhoChoices = new Choices('#eventWho', {
-      removeItemButton: false, // Disable removing items via 'x'
+      removeItemButton: false, // Removes 'X' from selected items
       shouldSort: false,
-      placeholder: true,
       placeholderValue: 'Select people',
-      searchEnabled: false,
+      searchEnabled: true,  // Enable searching if needed
+      itemSelectText: '',  // Disable 'Press to select' text
       classNames: {
-        itemChoice: 'choices__item--selectable'
-      },
-      addItemFilter: (value) => value.length > 0, // Prevent blank selections
-      itemSelectText: '' // Disable 'Press to select' text
+        containerOuter: 'choices dark-mode',
+        itemSelectable: 'choices__item--selectable'
+      }
     });
   });
+
 
             document.getElementById('startDate').addEventListener('change', setEndDate);
             document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
