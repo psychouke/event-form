@@ -14,7 +14,7 @@
 
     <!-- Include Google Maps API Library with your API Key -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
- <!-- START of Sleeker CSS Styles -->
+
     <style>
         /* Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -103,11 +103,10 @@
             background-color: #45a049;
         }
     </style>
-    <!-- END of Sleeker CSS Styles -->
-
+    
     <script>
-        const CLIENT_ID = '1046959611110-dtpbkhn3eud2bq7c0kesijj054jact8o.apps.googleusercontent.com';  // Replace with your OAuth 2.0 Client ID
-        const API_KEY = 'AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg';            // Replace with your Google API Key
+        const CLIENT_ID = 'YOUR_CLIENT_ID';  // Replace with your OAuth 2.0 Client ID
+        const API_KEY = 'YOUR_API_KEY';      // Replace with your Google API Key
         const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
         const SCOPES = "https://www.googleapis.com/auth/calendar.events";
 
@@ -116,31 +115,30 @@
         }
 
         function initAutocomplete() {
-    const eventLocationInput = document.getElementById('eventLocation');
-    const autocomplete = new google.maps.places.Autocomplete(eventLocationInput);
+            const eventLocationInput = document.getElementById('eventLocation');
+            const autocomplete = new google.maps.places.Autocomplete(eventLocationInput);
 
-    // Specify fields to return when user selects a place
-    autocomplete.setFields(['formatted_address', 'geometry', 'name']);
-}
+            // Specify fields to return when user selects a place
+            autocomplete.setFields(['formatted_address', 'geometry', 'name']);
+        }
 
-// Initialize Google Places Autocomplete when the document is loaded
-document.addEventListener('DOMContentLoaded', function () {
-    const eventWhoChoices = new Choices('#eventWho', {
-        removeItemButton: true,
-        shouldSort: false,
-        placeholder: true,
-        placeholderValue: 'Select people',
-        searchEnabled: false
-    });
+        // Initialize Google Places Autocomplete when the document is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            const eventWhoChoices = new Choices('#eventWho', {
+                removeItemButton: true,
+                shouldSort: false,
+                placeholder: true,
+                placeholderValue: 'Select people',
+                searchEnabled: false
+            });
 
-    document.getElementById('startDate').addEventListener('change', setEndDate);
-    document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
-    document.getElementById('allDay').addEventListener('change', handleAllDayChange);
+            document.getElementById('startDate').addEventListener('change', setEndDate);
+            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
+            document.getElementById('allDay').addEventListener('change', handleAllDayChange);
 
-    // Call the autocomplete initialization for the event location input field
-    initAutocomplete();
-});
-
+            // Call the autocomplete initialization for the event location input field
+            initAutocomplete();
+        });
 
         function initClient() {
             gapi.client.init({
@@ -154,8 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
         }
-
-        function createEvent() {
+              function createEvent() {
             const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
             const startDate = document.getElementById('startDate').value + 'T09:00:00';
             const endDate = document.getElementById('endDate').value + 'T17:00:00';
@@ -165,13 +162,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Map event types to their respective calendar IDs
             const calendarMapping = {
-                'Dance': '13dc90dafcf166ac6f8f0d7c67ca0d8a5016ae2cde7b7f50d8ddc10627fe5df6@group.calendar.google.com',
-                'Family': 'family08661693261563540417@group.calendar.google.com',
-                'House Work': '4c10bc8c44eb879686129e295b3e8e0741061e218c9c684822146cc6b10a899a@group.calendar.google.com',
-                'Kids Activity': 'a159d131f3c528548b7ffab0997eebb01b6d541ab3645f69ec2ad130b807db7d@group.calendar.google.com',
-                'Medical': '3c0cffcb1eedd4589b4a4fa83a9196aa5f36929692e7c51099304299b7540660@group.calendar.google.com',
-                'Other': '0e67d6c7f100b788dc2f86b3d17fe15fb73bb9f4308482c231ccc2f2e7510e21@group.calendar.google.com',
-                'Professional': '7f7316bcfa34c9f1adf75e09db3b21ca96e7efdeb2c6ac78fd7fb5ccca7edff5@group.calendar.google.com'
+                'Dance': 'YOUR_DANCE_CALENDAR_ID',
+                'Family': 'YOUR_FAMILY_CALENDAR_ID',
+                'House Work': 'YOUR_HOUSE_WORK_CALENDAR_ID',
+                'Kids Activity': 'YOUR_KIDS_ACTIVITY_CALENDAR_ID',
+                'Medical': 'YOUR_MEDICAL_CALENDAR_ID',
+                'Other': 'YOUR_OTHER_CALENDAR_ID',
+                'Professional': 'YOUR_PROFESSIONAL_CALENDAR_ID'
             };
 
             // Get the correct calendar ID based on the event type
@@ -190,42 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     'timeZone': 'America/New_York'
                 }
             };
-var event = {
-    'summary': eventTitle,
-    'location': eventLocation,
-    'description': eventNotes,
-    'start': {
-        'dateTime': startDate,
-        'timeZone': 'America/New_York'
-    },
-    'end': {
-        'dateTime': endDate,
-        'timeZone': 'America/New_York'
-    },
-    'recurrence': [] // Initialize an empty recurrence array
-};
-
-// Add the recurrence rule
-const recurringOption = document.getElementById('recurring').value;
-if (recurringOption === 'daily') {
-    event.recurrence = ['RRULE:FREQ=DAILY'];
-} else if (recurringOption === 'weekly') {
-    event.recurrence = ['RRULE:FREQ=WEEKLY'];
-} else if (recurringOption === 'monthly') {
-    event.recurrence = ['RRULE:FREQ=MONTHLY'];
-} else if (recurringOption === 'yearly') {
-    event.recurrence = ['RRULE:FREQ=YEARLY'];
-}
-
-// Insert the event into the calendar
-var request = gapi.client.calendar.events.insert({
-    'calendarId': calendarId,
-    'resource': event
-});
-
-request.execute(function(event) {
-    alert('Event created: ' + event.htmlLink);
-});
 
             var request = gapi.client.calendar.events.insert({
                 'calendarId': calendarId,  // Target the correct calendar
@@ -270,142 +231,15 @@ request.execute(function(event) {
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const eventWhoChoices = new Choices('#eventWho', {
-                removeItemButton: true,
-                shouldSort: false,
-                placeholder: true,
-                placeholderValue: 'Select people',
-                searchEnabled: false
-            });
+        function getOrderedPeople() {
+            const selectedPeople = Array.from(document.getElementById('eventWho').selectedOptions)
+                .map(option => option.value);
 
-            document.getElementById('startDate').addEventListener('change', setEndDate);
-            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
-            document.getElementById('allDay').addEventListener('change', handleAllDayChange);
-        });
+            const orderedNames = ["Kelly", "Nick", "Melanie", "Natalie", "Nicky", "Michaela"];
+            return orderedNames.filter(name => selectedPeople.includes(name)).join(', ');
+        }
+
     </script>
-
-     <style>
-        /* Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-     body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f4f7f8;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center; /* Center the content */
-}
-
-form {
-    width: 100%;
-    max-width: 600px;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;  /* Center the form horizontally */
-    text-align: left;    /* Align form content to the left */
-}
-
-h3 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-weight: 700;
-    display: block;
-    width: 100%;
-}
-
-.date-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.date-container div {
-    flex: 1;
-}
-
-@media (max-width: 600px) {
-    .date-container {
-        flex-direction: column;
-    }
-}
-
-        label {
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Flexbox layout for date selectors */
-        .date-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .date-container div {
-            flex: 1;
-        }
-
-        @media (max-width: 600px) {
-            .date-container {
-                flex-direction: column;
-            }
-        }
-
-        /* Box Shadow and hover effect for inputs */
-        input, select, textarea {
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
-        }
-
-    </style>
 </head>
 <body>
     <h3>Calendar Event Entry</h3>
@@ -454,15 +288,15 @@ h3 {
                 <option value="Yes">Yes</option>
             </select>
         </div>
-        
+
         <label for="recurring">Recurring Event</label>
-            <select id="recurring" required>
-                <option value="none" selected>None</option>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-    </select>
+        <select id="recurring" required>
+            <option value="none" selected>None</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
 
         <div id="timeFields">
             <label for="startTime" id="startTimeLabel">Start Time</label>
@@ -478,32 +312,33 @@ h3 {
                         document.write(option2);
                     }
                 </script>
- </select>
+            </select>
 
-        <label for="endTime" id="endTimeLabel">End Time</label>
-        <select id="endTime" required>
-            <option value="" disabled selected>Select end time</option>
-            <script>
-                for (let h = 5; h < 24; h++) {
-                    let hour = h > 12 ? h - 12 : h;
-                    let ampm = h >= 12 ? 'PM' : 'AM';
-                    let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
-                    let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
-                    document.write(option1);
-                    document.write(option2);
-                }
-            </script>
-        </select>
-    </div>
+            <label for="endTime" id="endTimeLabel">End Time</label>
+            <select id="endTime" required>
+                <option value="" disabled selected>Select end time</option>
+                <script>
+                    for (let h = 5; h < 24; h++) {
+                        let hour = h > 12 ? h - 12 : h;
+                        let ampm = h >= 12 ? 'PM' : 'AM';
+                        let option1 = `<option value="${hour}:00 ${ampm}">${hour}:00 ${ampm}</option>`;
+                        let option2 = `<option value="${hour}:30 ${ampm}">${hour}:30 ${ampm}</option>`;
+                        document.write(option1);
+                        document.write(option2);
+                    }
+                </script>
+            </select>
+        </div>
 
-    <label for="eventLocation">Event Location</label>
-    <input type="text" id="eventLocation" required>
+        <label for="eventLocation">Event Location</label>
+        <input type="text" id="eventLocation" required>
 
-    <label for="eventNotes">Add'l Details / Notes</label>
-    <textarea id="eventNotes" rows="4"></textarea>
+        <label for="eventNotes">Add'l Details / Notes</label>
+        <textarea id="eventNotes" rows="4"></textarea>
 
-    <button type="submit" onclick="handleClientLoad()">Submit</button>
-</form>
+        <button type="submit" onclick="handleClientLoad()">Submit</button>
+    </form>
 
 </body>
 </html>
+  
