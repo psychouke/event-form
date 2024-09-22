@@ -146,17 +146,13 @@ button:hover {
 
         // Initialize Google Places Autocomplete when the document is loaded
       <script>
-  document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     const eventWhoChoices = new Choices('#eventWho', {
-      removeItemButton: false, // Removes 'X' from selected items
+      removeItemButton: false,  // Prevents the 'X' for removal next to names
       shouldSort: false,
+      searchEnabled: false, // Disable search for now
       placeholderValue: 'Select people',
-      searchEnabled: true,  // Enable searching if needed
-      itemSelectText: '',  // Disable 'Press to select' text
-      classNames: {
-        containerOuter: 'choices dark-mode',
-        itemSelectable: 'choices__item--selectable'
-      }
+      itemSelectText: '',  // Removes "Press to select" message
     });
   });
 
