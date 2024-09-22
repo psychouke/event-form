@@ -121,8 +121,8 @@ button:hover {
 
     
     <script>
-        const CLIENT_ID = 'YOUR_CLIENT_ID';  // Replace with your OAuth 2.0 Client ID
-        const API_KEY = 'YOUR_API_KEY';      // Replace with your Google API Key
+        const CLIENT_ID = '1046959611110-dtpbkhn3eud2bq7c0kesijj054jact8o.apps.googleusercontent.com';  // Replace with your OAuth 2.0 Client ID
+        const API_KEY = 'AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg';      // Replace with your Google API Key
         const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
         const SCOPES = "https://www.googleapis.com/auth/calendar.events";
 
@@ -139,14 +139,20 @@ button:hover {
         }
 
         // Initialize Google Places Autocomplete when the document is loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            const eventWhoChoices = new Choices('#eventWho', {
-                removeItemButton: true,
-                shouldSort: false,
-                placeholder: true,
-                placeholderValue: 'Select people',
-                searchEnabled: false
-            });
+       document.addEventListener('DOMContentLoaded', function () {
+    const eventWhoChoices = new Choices('#eventWho', {
+      removeItemButton: false, // Disable removing items via 'x'
+      shouldSort: false,
+      placeholder: true,
+      placeholderValue: 'Select people',
+      searchEnabled: false,
+      classNames: {
+        itemChoice: 'choices__item--selectable'
+      },
+      addItemFilter: (value) => value.length > 0, // Prevent blank selections
+      itemSelectText: '' // Disable 'Press to select' text
+    });
+  });
 
             document.getElementById('startDate').addEventListener('change', setEndDate);
             document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
