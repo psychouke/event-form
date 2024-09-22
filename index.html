@@ -18,253 +18,107 @@
     <!-- Include Google Maps API Library with your API Key -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
 
-<style>
-/* Dark Mode Styling */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #1e1e1e;
-    color: #ffffff;
-}
+   <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
 
-form {
-    background-color: #333;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 0 auto;
-    font-family: 'Roboto', sans-serif; /* Apply font here */
-}
+        form {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
+        h3 {
+            text-align: center;
+            color: #fff;
+        }
 
-h3 {
-  text-align: center;
-  color: #fff;
-}
+        label {
+            color: #fff;
+        }
 
-label {
-  color: #fff;
-}
+        input, select, textarea {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #555;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
 
-input, select, textarea {
-  background-color: #444;
-  color: #fff;
-  border: 1px solid #555;
-  width: 100%;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 5px;
-}
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
 
-button {
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100%;
-}
+        button:hover {
+            background-color: #45a049;
+        }
 
-button:hover {
-  background-color: #45a049;
-}
+        /* Dark Mode Dropdown Styling */
+        .choices__inner {
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
 
-/* Dark Mode Dropdown Styling */
-.choices__inner {
-  background-color: #333;
-  color: #fff;
-  border-radius: 5px;
-}
+        .choices__list--dropdown .choices__item--selectable {
+            color: #fff;
+            background-color: #444;
+        }
 
-.choices__list--dropdown .choices__item--selectable {
-  color: #fff;
-  background-color: #444;
-}
+        .choices__list--dropdown .choices__item.is-highlighted {
+            background-color: #555;
+            color: #fff;
+        }
 
-.choices__list--dropdown .choices__item.is-highlighted {
-  background-color: #555;
-  color: #fff;
-}
+        .choices__list--dropdown .choices__item:hover {
+            background-color: #666;
+            color: #fff;
+        }
 
-.choices__list--dropdown .choices__item:hover {
-  background-color: #666;
-  color: #fff;
-}
+        /* Selected items styling */
+        .choices__list--multiple .choices__item {
+            background-color: #4CAF50;
+            color: #fff;
+            display: inline-block;
+            margin: 2px 5px;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
 
-/* Selected items styling */
-.choices__list--multiple .choices__item {
-  background-color: #4CAF50;
-  color: #fff;
-  display: inline-block;
-  margin: 2px 5px;
-  padding: 5px 10px;
-  border-radius: 3px;
-}
+        .choices__list--multiple {
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
 
-.choices__list--multiple {
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
+        .choices__list--multiple .choices__item[data-item][data-deletable] {
+            display: none;
+        }
 
-.choices__list--multiple .choices__item[data-item][data-deletable] {
-  display: none;
-}
+        /* Checkbox Styling */
+        .choices__list--dropdown .choices__item::before {
+            content: "\\2610"; /* Empty checkbox */
+            color: #4CAF50;
+            margin-right: 8px;
+        }
 
-/* Checkbox Styling */
-.choices__list--dropdown .choices__item::before {
-  content: "\2610"; /* Empty checkbox */
-  color: #4CAF50;
-  margin-right: 8px;
-}
-
-.choices__list--dropdown .choices__item[data-selected="true"]::before {
-  content: "\2611"; /* Checked checkbox */
-}
-
+        .choices__list--dropdown .choices__item[data-selected="true"]::before {
+            content: "\\2611"; /* Checked checkbox */
+        }
     </style>
-
-
-    
-    <script>
-        const CLIENT_ID = '1046959611110-dtpbkhn3eud2bq7c0kesijj054jact8o.apps.googleusercontent.com';  // Replace with your OAuth 2.0 Client ID
-        const API_KEY = 'AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg';      // Replace with your Google API Key
-        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-        const SCOPES = "https://www.googleapis.com/auth/calendar.events";
-
-        function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
-        }
-
-        function initAutocomplete() {
-            const eventLocationInput = document.getElementById('eventLocation');
-            const autocomplete = new google.maps.places.Autocomplete(eventLocationInput);
-
-            // Specify fields to return when user selects a place
-            autocomplete.setFields(['formatted_address', 'geometry', 'name']);
-        }
-
-        // Initialize Google Places Autocomplete when the document is loaded
-      <script>
- document.addEventListener('DOMContentLoaded', function () {
-    const eventWhoChoices = new Choices('#eventWho', {
-      removeItemButton: false,  // Prevents the 'X' for removal next to names
-      shouldSort: false,
-      searchEnabled: false, // Disable search for now
-      placeholderValue: 'Select people',
-      itemSelectText: '',  // Removes "Press to select" message
-    });
-  });
-
-
-            document.getElementById('startDate').addEventListener('change', setEndDate);
-            document.getElementById('endDate').addEventListener('change', handleMultiDayEvent);
-            document.getElementById('allDay').addEventListener('change', handleAllDayChange);
-
-            // Call the autocomplete initialization for the event location input field
-            initAutocomplete();
-        });
-
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            }).then(() => {
-                gapi.auth2.getAuthInstance().signIn().then(() => {
-                    createEvent();
-                });
-            });
-        }
-              function createEvent() {
-            const eventTitle = getOrderedPeople() + " - " + document.getElementById('eventTitle').value;
-            const startDate = document.getElementById('startDate').value + 'T09:00:00';
-            const endDate = document.getElementById('endDate').value + 'T17:00:00';
-            const eventLocation = document.getElementById('eventLocation').value;
-            const eventNotes = document.getElementById('eventNotes').value;
-            const eventType = document.getElementById('eventType').value;
-
-            // Map event types to their respective calendar IDs
-            const calendarMapping = {
-                'Dance': 'YOUR_DANCE_CALENDAR_ID',
-                'Family': 'YOUR_FAMILY_CALENDAR_ID',
-                'House Work': 'YOUR_HOUSE_WORK_CALENDAR_ID',
-                'Kids Activity': 'YOUR_KIDS_ACTIVITY_CALENDAR_ID',
-                'Medical': 'YOUR_MEDICAL_CALENDAR_ID',
-                'Other': 'YOUR_OTHER_CALENDAR_ID',
-                'Professional': 'YOUR_PROFESSIONAL_CALENDAR_ID'
-            };
-
-            // Get the correct calendar ID based on the event type
-            const calendarId = calendarMapping[eventType];
-
-            var event = {
-                'summary': eventTitle,
-                'location': eventLocation,
-                'description': eventNotes,
-                'start': {
-                    'dateTime': startDate,
-                    'timeZone': 'America/New_York'
-                },
-                'end': {
-                    'dateTime': endDate,
-                    'timeZone': 'America/New_York'
-                }
-            };
-
-            var request = gapi.client.calendar.events.insert({
-                'calendarId': calendarId,  // Target the correct calendar
-                'resource': event
-            });
-
-            request.execute(function(event) {
-                alert('Event created: ' + event.htmlLink);
-            });
-        }
-
-        function setEndDate() {
-            const startDate = document.getElementById('startDate').value;
-            document.getElementById('endDate').value = startDate;
-        }
-
-        function handleMultiDayEvent() {
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            const allDayContainer = document.getElementById('allDayContainer');
-            const startTimeLabel = document.getElementById('startTimeLabel');
-            const endTimeLabel = document.getElementById('endTimeLabel');
-
-            if (endDate > startDate) {
-                allDayContainer.style.display = 'none';
-                startTimeLabel.innerText = "Start Time (First Day)";
-                endTimeLabel.innerText = "End Time (Last Day)";
-            } else {
-                allDayContainer.style.display = 'block';
-                startTimeLabel.innerText = "Start Time";
-                endTimeLabel.innerText = "End Time";
-            }
-        }
-
-        function handleAllDayChange() {
-            const allDay = document.getElementById('allDay').value;
-            const timeFields = document.getElementById('timeFields');
-            if (allDay === "Yes") {
-                timeFields.style.display = 'none';
-            } else {
-                timeFields.style.display = 'block';
-            }
-        }
-
-        function getOrderedPeople() {
-            const selectedPeople = Array.from(document.getElementById('eventWho').selectedOptions)
-                .map(option => option.value);
-
-            const orderedNames = ["Kelly", "Nick", "Melanie", "Natalie", "Nicky", "Michaela"];
-            return orderedNames.filter(name => selectedPeople.includes(name)).join(', ');
-        }
-
-    </script>
 </head>
 <body>
     <h3>Calendar Event Entry</h3>
@@ -279,7 +133,7 @@ button:hover {
             <option value="Michaela">Michaela</option>
         </select>
 
-        <label for="eventType">Event Type</label>
+ <label for="eventType">Event Type</label>
         <select id="eventType" required>
             <option value="" disabled selected>Select event type</option>
             <option value="Kids Activity">Kids Activity</option>
@@ -313,15 +167,6 @@ button:hover {
                 <option value="Yes">Yes</option>
             </select>
         </div>
-
-        <label for="recurring">Recurring Event</label>
-        <select id="recurring" required>
-            <option value="none" selected>None</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-        </select>
 
         <div id="timeFields">
             <label for="startTime" id="startTimeLabel">Start Time</label>
@@ -364,6 +209,45 @@ button:hover {
         <button type="submit" onclick="handleClientLoad()">Submit</button>
     </form>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Choices.js
+            const eventWhoChoices = new Choices('#eventWho', {
+                removeItemButton: false,
+                shouldSort: false,
+                searchEnabled: false,
+                placeholderValue: 'Select people',
+                itemSelectText: '',  // Removes "Press to select" message
+            });
+
+            // Automatically populate end date based on the start date
+            document.getElementById('startDate').addEventListener('change', function () {
+                const startDate = document.getElementById('startDate').value;
+                document.getElementById('endDate').value = startDate;
+            });
+
+            // Check if end date is greater than start date
+            document.getElementById('endDate').addEventListener('change', function () {
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+
+                // Hide 'All Day' option and change labels if end date is greater than start date
+                if (endDate > startDate) {
+                    document.getElementById('allDayContainer').style.display = 'none';
+                    document.getElementById('startTimeLabel').innerText = 'Start Time (First Day)';
+                    document.getElementById('endTimeLabel').innerText = 'End Time (Last Day)';
+                } else {
+                    // Reset if end date is the same or less than start date
+                    document.getElementById('allDayContainer').style.display = 'block';
+                    document.getElementById('startTimeLabel').innerText = 'Start Time';
+                    document.getElementById('endTimeLabel').innerText = 'End Time';
+                }
+            });
+        });
+
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+    </script>
 </body>
 </html>
-  
