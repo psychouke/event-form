@@ -100,6 +100,42 @@ document.addEventListener('DOMContentLoaded', function () {
                     'timeZone': 'America/New_York'
                 }
             };
+var event = {
+    'summary': eventTitle,
+    'location': eventLocation,
+    'description': eventNotes,
+    'start': {
+        'dateTime': startDate,
+        'timeZone': 'America/New_York'
+    },
+    'end': {
+        'dateTime': endDate,
+        'timeZone': 'America/New_York'
+    },
+    'recurrence': [] // Initialize an empty recurrence array
+};
+
+// Add the recurrence rule
+const recurringOption = document.getElementById('recurring').value;
+if (recurringOption === 'daily') {
+    event.recurrence = ['RRULE:FREQ=DAILY'];
+} else if (recurringOption === 'weekly') {
+    event.recurrence = ['RRULE:FREQ=WEEKLY'];
+} else if (recurringOption === 'monthly') {
+    event.recurrence = ['RRULE:FREQ=MONTHLY'];
+} else if (recurringOption === 'yearly') {
+    event.recurrence = ['RRULE:FREQ=YEARLY'];
+}
+
+// Insert the event into the calendar
+var request = gapi.client.calendar.events.insert({
+    'calendarId': calendarId,
+    'resource': event
+});
+
+request.execute(function(event) {
+    alert('Event created: ' + event.htmlLink);
+});
 
             var request = gapi.client.calendar.events.insert({
                 'calendarId': calendarId,  // Target the correct calendar
