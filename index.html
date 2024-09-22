@@ -16,59 +16,6 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
 
 <style>
-/* Dark Mode and Dropdown Styling */
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #1c1c1c;
-    color: #f0f0f0;
-}
-    
-h3 {
-  text-align: center;
-  margin-top: 20px;
-  color: #fff;
-}
-    
-form {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #2b2b2b;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    background-color: #3c3c3c;
-    color: #f0f0f0;
-    border: 1px solid #444;
-    border-radius: 5px;
-}
-
-button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-label {
-    font-weight: bold;
-    color: #f0f0f0;
-}
-
-/* Dropdown Styling for Multi-Select */
 /* Dark Mode Dropdown Styling */
 .choices__inner {
   background-color: #333;
@@ -78,46 +25,49 @@ label {
 
 .choices__list--dropdown .choices__item--selectable {
   color: #fff;
-  background-color: #444; /* Ensures better contrast */
+  background-color: #444;
 }
 
 .choices__list--dropdown .choices__item.is-highlighted {
-  background-color: #666;
+  background-color: #555;
   color: #fff;
 }
 
 .choices__list--dropdown .choices__item:hover {
-  background-color: #555; /* For better hover visibility */
+  background-color: #666;
   color: #fff;
 }
 
-/* Selected items styling (make them inline and on the same row) */
+/* Selected items styling (remove 'X') */
 .choices__list--multiple .choices__item {
   background-color: #4CAF50;
   color: #fff;
-  display: inline-block; /* Makes names appear inline */
+  display: inline-block;
   margin: 2px 5px;
   padding: 5px 10px;
   border-radius: 3px;
 }
 
-/* Remove spacing after the selected items to prevent wrapping too soon */
 .choices__list--multiple {
   flex-wrap: nowrap;
-  white-space: normal; /* Keeps selected items in the same line */
+  white-space: normal;
 }
 
 .choices__list--multiple .choices__item[data-item][data-deletable] {
-  background-color: #4CAF50;
-  color: #fff;
+  display: none; /* Hides the 'X' button */
 }
 
-/* Styling for checkboxes */
+/* Checkbox Styling */
 .choices__list--dropdown .choices__item::before {
-  content: "\2713"; /* Unicode checkmark */
+  content: "\2610"; /* Empty checkbox unicode */
   color: #4CAF50;
   display: inline-block;
   margin-right: 8px;
+}
+
+.choices__list--dropdown .choices__item[data-selected="true"]::before {
+  content: "\2611"; /* Checked checkbox unicode */
+  color: #4CAF50;
 }
 
 /* Input placeholder styling */
