@@ -71,62 +71,54 @@
             background-color: #45a049;
         }
 
-        /* Dark Mode Dropdown Styling */
-        .choices__inner, .choices__list--dropdown .choices__item {
-            background-color: #333; /* Dark background */
-            color: white; /* Ensure text is white for visibility */
-            border: 1px solid #555; /* Adjust border for contrast */
-        }
+/* Styling for the dropdown and checkboxes */
+.choices__inner, .choices__list--dropdown .choices__item {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+}
 
-        .choices__list--dropdown .choices__item--selectable.is-highlighted {
-            background-color: #555; /* Highlighted item background */
-            color: white; /* Keep text white for highlighted items */
-        }
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: #555;
+    color: white; /* Ensure text is visible on highlight */
+}
 
-        .choices__list--dropdown .choices__item--selectable {
-            padding-left: 25px;
-        }
+.choices__list--dropdown .choices__item--selectable {
+    padding-left: 25px;
+    display: flex;
+    align-items: center;
+}
 
-        .choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
-            position: absolute;
-            left: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+.choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
+    margin-right: 10px;
+}
 
-        .choices__list--dropdown .choices__item--selectable input[type="checkbox"]:checked + label {
-            color: #fff;
-        }
+.choices__list--dropdown .choices__item--selectable input[type="checkbox"]:checked + label {
+    color: white;
+}
 
-        .choices__list--dropdown .choices__item {
-            position: relative;
-        }
+.choices__list--multiple .choices__item {
+    background-color: transparent;
+    color: white;
+}
 
-        .choices__list--dropdown .choices__item label {
-            padding-left: 25px;
-        }
+.choices__list--multiple .choices__item span {
+    display: none; /* Remove the "x" button for deselecting */
+}
 
-        .choices__item--choice {
-            border: none; /* Remove the default border for cleaner look */
-        }
+.choices__list--dropdown .choices__item::before {
+    content: '\\2610'; /* Empty checkbox */
+    color: #fff;
+    margin-right: 8px;
+}
 
-        /* Fix for the display of selected items */
-        .choices__list--multiple .choices__item {
-            background-color: transparent; /* Remove green background */
-            border: none; /* No border for selected items */
-            color: white; /* Keep text white */
-            display: inline; /* Keep items inline */
-        }
+.choices__list--dropdown .choices__item[data-selected="true"]::before {
+    content: '\\2611'; /* Checked checkbox */
+}
 
-        .choices__list--multiple .choices__item span {
-            display: none; /* Remove the "X" to deselect */
-        }
 
-        /* Hide the checkbox label by default */
-        .choices__list--multiple input[type="checkbox"] + label {
-            display: inline-block;
-            margin-left: 0;
-        }
+
+     
     </style>
 </head>
 <body>
@@ -219,41 +211,42 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize Choices.js
-            const eventWhoChoices = new Choices('#eventWho', {
-                removeItemButton: false,
-                shouldSort: false,
-                searchEnabled: false,
-                placeholderValue: 'Select people',
-                itemSelectText: '',  // Removes "Press to select" message
-            });
+      document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Choices.js
+    const eventWhoChoices = new Choices('#eventWho', {
+        removeItemButton: false, // This will ensure no 'x' buttons
+        shouldSort: false,
+        searchEnabled: false,
+        placeholderValue: 'Select people',
+        renderSelectedChoices: 'always', // Keep names in dropdown even after selection
+        classNames: {
+            containerOuter: 'choices custom-choices'
+        }
+    });
 
-            // Automatically populate end date based on the start date
-            document.getElementById('startDate').addEventListener('change', function () {
-                const startDate = document.getElementById('startDate').value;
-                document.getElementById('endDate').value = startDate;
-            });
+    // Automatically populate end date based on start date
+    document.getElementById('startDate').addEventListener('change', function () {
+        const startDate = document.getElementById('startDate').value;
+        document.getElementById('endDate').value = startDate;
+    });
 
-            // Check if end date is greater than start date
-            document.getElementById('endDate').addEventListener('change', function () {
-                const startDate = new Date(document.getElementById('startDate').value);
-                const endDate = new Date(document.getElementById('endDate').value);
+    // Update end date, hide 'All Day' option if end date is greater than start date
+    document.getElementById('endDate').addEventListener('change', function () {
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
 
-                // Hide 'All Day' option and change labels if end date is greater than start date
-                if (endDate > startDate) {
-                    document.getElementById('allDayContainer').style.display = 'none';
-                    document.getElementById('startTimeLabel').innerText = 'Start Time (First Day)';
-                    document.getElementById('endTimeLabel').innerText = 'End Time (Last Day)';
-                } else {
-                    // Reset if end date is the same or less than start date
-                   
-                    document.getElementById('allDayContainer').style.display = 'block';
-                    document.getElementById('startTimeLabel').innerText = 'Start Time';
-                    document.getElementById('endTimeLabel').innerText = 'End Time';
-                }
-            });
-        });
+        if (endDate > startDate) {
+            document.getElementById('allDayContainer').style.display = 'none';
+            document.getElementById('startTimeLabel').innerText = 'Start Time (First Day)';
+            document.getElementById('endTimeLabel').innerText = 'End Time (Last Day)';
+        } else {
+            document.getElementById('allDayContainer').style.display = 'block';
+            document.getElementById('startTimeLabel').innerText = 'Start Time';
+            document.getElementById('endTimeLabel').innerText = 'End Time';
+        }
+    });
+});
+
 
         function handleClientLoad() {
             gapi.load('client:auth2', initClient);
