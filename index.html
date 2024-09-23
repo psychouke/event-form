@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar Event Entry with Google Calendar Integration</title>
 
+      <!-- Include Google Fonts for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
     <!-- Include Choices.js Library for Multi-Select -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -18,7 +21,8 @@
     <!-- Include Google Maps API Library with your API Key -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY807-q9strVb-w59uTKLqi6iN-EttqEg&libraries=places"></script>
 
-   <style>
+ 
+ <style>
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #1e1e1e;
@@ -68,129 +72,77 @@
         }
 
         /* Dark Mode Dropdown Styling */
-        .choices__inner {
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
+        .choices__inner, .choices__list--dropdown .choices__item {
+            background-color: #333; /* Dark background */
+            color: white; /* Ensure text is white for visibility */
+            border: 1px solid #555; /* Adjust border for contrast */
+        }
+
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: #555; /* Highlighted item background */
+            color: white; /* Keep text white for highlighted items */
         }
 
         .choices__list--dropdown .choices__item--selectable {
-            color: #fff;
-            background-color: #444;
+            padding-left: 25px;
         }
 
-        .choices__list--dropdown .choices__item.is-highlighted {
-            background-color: #555;
+        .choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .choices__list--dropdown .choices__item--selectable input[type="checkbox"]:checked + label {
             color: #fff;
         }
 
-        .choices__list--dropdown .choices__item:hover {
-            background-color: #666;
-            color: #fff;
+        .choices__list--dropdown .choices__item {
+            position: relative;
         }
 
-        /* Selected items styling */
+        .choices__list--dropdown .choices__item label {
+            padding-left: 25px;
+        }
+
+        .choices__item--choice {
+            border: none; /* Remove the default border for cleaner look */
+        }
+
+        /* Fix for the display of selected items */
         .choices__list--multiple .choices__item {
-            background-color: #4CAF50;
-            color: #fff;
+            background-color: transparent; /* Remove green background */
+            border: none; /* No border for selected items */
+            color: white; /* Keep text white */
+            display: inline; /* Keep items inline */
+        }
+
+        .choices__list--multiple .choices__item span {
+            display: none; /* Remove the "X" to deselect */
+        }
+
+        /* Hide the checkbox label by default */
+        .choices__list--multiple input[type="checkbox"] + label {
             display: inline-block;
-            margin: 2px 5px;
-            padding: 5px 10px;
-            border-radius: 3px;
+            margin-left: 0;
         }
-
-        .choices__list--multiple {
-            flex-wrap: nowrap;
-            white-space: nowrap;
-        }
-
-        .choices__list--multiple .choices__item[data-item][data-deletable] {
-            display: none;
-        }
-
-        /* Checkbox Styling */
-        .choices__list--dropdown .choices__item::before {
-            content: "\\2610"; /* Empty checkbox */
-            color: #4CAF50;
-            margin-right: 8px;
-        }
-
-        .choices__list--dropdown .choices__item[data-selected="true"]::before {
-            content: "\\2611"; /* Checked checkbox */
-        }
-
-       /* Choices.js styling fix for dropdown text in dark mode */
-.choices__inner, .choices__list--dropdown .choices__item {
-    background-color: #333; /* Dark background */
-    color: white; /* Ensure text is white for visibility */
-    border: 1px solid #555; /* Adjust border for contrast */
-}
-
-.choices__list--dropdown .choices__item--selectable.is-highlighted {
-    background-color: #555; /* Highlighted item background */
-    color: white; /* Keep text white for highlighted items */
-}
-
-.choices__list--dropdown .choices__item--selectable {
-    padding-left: 25px;
-}
-
-.choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
-    position: absolute;
-    left: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.choices__list--dropdown .choices__item--selectable input[type="checkbox"]:checked + label {
-    color: #fff;
-}
-
-.choices__list--dropdown .choices__item {
-    position: relative;
-}
-
-.choices__list--dropdown .choices__item label {
-    padding-left: 25px;
-}
-
-.choices__item--choice {
-    border: none; /* Remove the default border for cleaner look */
-}
-
-/* Fix for the display of selected items */
-.choices__list--multiple .choices__item {
-    background-color: transparent; /* Remove green background */
-    border: none; /* No border for selected items */
-    color: white; /* Keep text white */
-    display: inline; /* Keep items inline */
-}
-
-.choices__list--multiple .choices__item span {
-    display: none; /* Remove the "X" to deselect */
-}
-
-/* Hide the checkbox label by default */
-.choices__list--multiple input[type="checkbox"] + label {
-    display: inline-block;
-    margin-left: 0;
-}
     </style>
 </head>
 <body>
     <h3>Calendar Event Entry</h3>
     <form id="eventForm">
-      <label for="eventWho">Who's Event</label>
-<select id="eventWho" multiple required>
-    <option value="Kelly">Kelly</option>
-    <option value="Nick">Nick</option>
-    <option value="Melanie">Melanie</option>
-    <option value="Natalie">Natalie</option>
-    <option value="Nicky">Nicky</option>
-    <option value="Michaela">Michaela</option>
-</select>
+        <label for="eventWho">Who's Event</label>
+        <select id="eventWho" multiple required>
+            <option value="Kelly">Kelly</option>
+            <option value="Nick">Nick</option>
+            <option value="Melanie">Melanie</option>
+            <option value="Natalie">Natalie</option>
+            <option value="Nicky">Nicky</option>
+            <option value="Michaela">Michaela</option>
+        </select>
 
- <label for="eventType">Event Type</label>
+        <label for="eventType">Event Type</label>
         <select id="eventType" required>
             <option value="" disabled selected>Select event type</option>
             <option value="Kids Activity">Kids Activity</option>
@@ -267,66 +219,115 @@
     </form>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Choices.js with custom configuration
-    const eventWhoChoices = new Choices('#eventWho', {
-        removeItemButton: false,   // No 'X' for removing an item directly from the input
-        shouldSort: false,         // Disable sorting to keep the original order
-        placeholderValue: 'Select people',
-        searchEnabled: false,
-        itemSelectText: '',        // Remove 'Press to select'
-        duplicateItemsAllowed: false,  // Prevent adding duplicate names
-        renderSelectedChoices: 'auto', // Only selected names will show
-        callbackOnCreateTemplates: function (template) {
-            return {
-                item: function (classNames, data) {
-                    return template(`<span class="${classNames.item}">${data.label}</span>`);
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Choices.js
+            const eventWhoChoices = new Choices('#eventWho', {
+                removeItemButton: false,
+                shouldSort: false,
+                searchEnabled: false,
+                placeholderValue: 'Select people',
+                itemSelectText: '',  // Removes "Press to select" message
+            });
+
+            // Automatically populate end date based on the start date
+            document.getElementById('startDate').addEventListener('change', function () {
+                const startDate = document.getElementById('startDate').value;
+                document.getElementById('endDate').value = startDate;
+            });
+
+            // Check if end date is greater than start date
+            document.getElementById('endDate').addEventListener('change', function () {
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+
+                // Hide 'All Day' option and change labels if end date is greater than start date
+                if (endDate > startDate) {
+                    document.getElementById('allDayContainer').style.display = 'none';
+                    document.getElementById('startTimeLabel').innerText = 'Start Time (First Day)';
+                    document.getElementById('endTimeLabel').innerText = 'End Time (Last Day)';
+                } else {
+                    // Reset if end date is the same or less than start date
+                   
+                    document.getElementById('allDayContainer').style.display = 'block';
+                    document.getElementById('startTimeLabel').innerText = 'Start Time';
+                    document.getElementById('endTimeLabel').innerText = 'End Time';
+                }
+            });
+        });
+
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                apiKey: 'YOUR_API_KEY', // Replace with your Google API key
+                clientId: 'YOUR_CLIENT_ID', // Replace with your Google Client ID
+                discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+                scope: "https://www.googleapis.com/auth/calendar.events"
+            }).then(function () {
+                // Handle the sign-in state
+                gapi.auth2.getAuthInstance().signIn().then(function () {
+                    createEvent();
+                });
+            });
+        }
+
+        function createEvent() {
+            const eventTitle = getFormattedWho() + " - " + document.getElementById('eventTitle').value;
+            const startDate = document.getElementById('startDate').value + 'T09:00:00';
+            const endDate = document.getElementById('endDate').value + 'T17:00:00';
+            const eventLocation = document.getElementById('eventLocation').value;
+            const eventNotes = document.getElementById('eventNotes').value;
+            const eventType = document.getElementById('eventType').value;
+
+            // Map event types to their respective calendar IDs
+            const calendarMapping = {
+                'Dance': 'YOUR_DANCE_CALENDAR_ID',
+                'Family': 'YOUR_FAMILY_CALENDAR_ID',
+                'House Work': 'YOUR_HOUSEWORK_CALENDAR_ID',
+                'Kids Activity': 'YOUR_KIDS_CALENDAR_ID',
+                'Medical': 'YOUR_MEDICAL_CALENDAR_ID',
+                'Other': 'YOUR_OTHER_CALENDAR_ID',
+                'Professional': 'YOUR_PROFESSIONAL_CALENDAR_ID'
+            };
+
+            const calendarId = calendarMapping[eventType];
+
+            var event = {
+                'summary': eventTitle,
+                'location': eventLocation,
+                'description': eventNotes,
+                'start': {
+                    'dateTime': startDate,
+                    'timeZone': 'America/New_York'
                 },
-                choice: function (classNames, data) {
-                    return template(`
-                        <div class="${classNames.item} ${classNames.itemChoice} ${data.selected ? classNames.selectedState : ''}" data-id="${data.id}" data-value="${data.value}" data-select-text="${this.config.itemSelectText}" data-choice-selectable>
-                            <input type="checkbox" ${data.selected ? 'checked' : ''} /> ${data.label}
-                        </div>
-                    `);
+                'end': {
+                    'dateTime': endDate,
+                    'timeZone': 'America/New_York'
                 }
             };
+
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': calendarId,  // Target the correct calendar
+                'resource': event
+            });
+
+            request.execute(function(event) {
+                alert('Event created: ' + event.htmlLink);
+            });
         }
-    });
 
-    // Automatically populate end date based on the start date
-    document.getElementById('startDate').addEventListener('change', function () {
-        const startDate = document.getElementById('startDate').value;
-        document.getElementById('endDate').value = startDate;
-    });
+        // Format "Who's Event" to use proper separator (comma, &, etc.)
+        function getFormattedWho() {
+            const selectedItems = eventWhoChoices.getValue(true); // Get array of selected values (names)
+            if (selectedItems.length === 0) return '';  // No name selected
 
-    // Handle multi-day event and adjust start/end time labels
-    document.getElementById('endDate').addEventListener('change', function () {
-        const startDate = new Date(document.getElementById('startDate').value);
-        const endDate = new Date(document.getElementById('endDate').value);
+            if (selectedItems.length === 1) return selectedItems[0]; // Single name
 
-        if (endDate > startDate) {
-            document.getElementById('allDayContainer').style.display = 'none';
-            document.getElementById('startTimeLabel').innerText = 'Start Time (First Day)';
-            document.getElementById('endTimeLabel').innerText = 'End Time (Last Day)';
-        } else {
-            document.getElementById('allDayContainer').style.display = 'block';
-            document.getElementById('startTimeLabel').innerText = 'Start Time';
-            document.getElementById('endTimeLabel').innerText = 'End Time';
+            const lastItem = selectedItems.pop();  // Get the last name
+            return `${selectedItems.join(', ')} & ${lastItem}`; // Format: name, name & name
         }
-    });
-
-    // Function to create formatted event title for calendar (name, name & name)
-    function getFormattedWho() {
-        const selectedItems = eventWhoChoices.getValue(true); // Get array of selected values (names)
-        if (selectedItems.length === 0) return '';  // No name selected
-
-        if (selectedItems.length === 1) return selectedItems[0]; // Single name
-
-        const lastItem = selectedItems.pop();  // Get the last name
-        return `${selectedItems.join(', ')} & ${lastItem}`; // Format: name, name & name
-    }
-});
-
     </script>
 </body>
 </html>
