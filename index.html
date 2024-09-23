@@ -23,24 +23,27 @@
 
  
  <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
+     /* General Body and Form Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
 
-        form {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+form {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
 
-        h3 {
-            text-align: center;
-            color: #fff;
-        }
+/* Align text and form layout */
+h3 {
+    text-align: center;
+    color: #fff;
+}
+
 
         label {
             color: #fff;
@@ -71,81 +74,28 @@
             background-color: #45a049;
         }
 
-/* Styling for the dropdown and checkboxes */
-.choices__inner, .choices__list--dropdown .choices__item {
-    background-color: #333;
-    color: white;
-    border: 1px solid #555;
+/* Dropdown Styling for Multi-Select */
+.choices__list--dropdown .choices__item--selectable::before {
+    content: '\\2610'; /* Empty checkbox */
+    color: #fff;
+    margin-right: 8px;
 }
 
-.choices__list--dropdown .choices__item--selectable.is-highlighted {
-    background-color: #555;
-    color: white; /* Ensure text is visible on highlight */
+.choices__list--dropdown .choices__item--selectable[data-selected="true"]::before {
+    content: '\\2611'; /* Filled checkbox when selected */
+    color: #fff;
 }
 
-.choices__list--dropdown .choices__item--selectable {
-    padding-left: 25px;
-    display: flex;
-    align-items: center;
-}
-
-.choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-.choices__list--dropdown .choices__item--selectable input[type="checkbox"]:checked + label {
-    color: white;
-}
-
+/* Style the multi-selected items to display inline with a comma */
 .choices__list--multiple .choices__item {
-    background-color: transparent;
-    color: white;
-}
-
-.choices__list--multiple .choices__item span {
-    display: none; /* Remove the "x" button for deselecting */
-}
-
-.choices__list--dropdown .choices__item::before {
-    content: '\\2610'; /* Empty checkbox */
+    background-color: #333; /* Matches your form background */
+    border: none;
     color: #fff;
-    margin-right: 8px;
 }
 
-.choices__list--dropdown .choices__item[data-selected="true"]::before {
-    content: '\\2611'; /* Checked checkbox */
-}
-
-/* Styling for the dropdown and checkboxes */
-.choices__inner, .choices__list--dropdown .choices__item {
-    background-color: #333;
-    color: white;
-    border: 1px solid #555;
-}
-
-.choices__list--dropdown .choices__item--selectable.is-highlighted {
-    background-color: #555;
-    color: white; /* Ensure text is visible on highlight */
-}
-
-.choices__list--dropdown .choices__item--selectable {
-    padding-left: 25px;
-    display: flex;
-    align-items: center;
-}
-
-.choices__list--dropdown .choices__item--selectable input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-.choices__list--dropdown .choices__item::before {
-    content: '\\2610'; /* Empty checkbox */
-    color: #fff;
-    margin-right: 8px;
-}
-
-.choices__list--dropdown .choices__item[data-selected="true"]::before {
-    content: '\\2611'; /* Checked checkbox */
+.choices__list--multiple .choices__item[data-value] {
+    display: inline-block;
+    margin-right: 5px;
 }
 
 
@@ -242,20 +192,20 @@
     </form>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const eventWhoChoices = new Choices('#eventWho', {
-        removeItemButton: false, // This will ensure no 'x' buttons
-        shouldSort: false,
-        searchEnabled: false,
-        placeholderValue: 'Select people',
-        renderSelectedChoices: 'always', // Keep names in dropdown even after selection
-        duplicateItemsAllowed: false,
-        itemSelectText: '',
-        classNames: {
-            containerOuter: 'choices custom-choices'
-        }
-    });
+// Initialize Choices.js
+const eventWhoChoices = new Choices('#eventWho', {
+    removeItemButton: false, // This will ensure no 'x' buttons
+    shouldSort: false,
+    searchEnabled: false,
+    placeholderValue: 'Select people',
+    renderSelectedChoices: 'always', // Keep names in dropdown even after selection
+    duplicateItemsAllowed: false, 
+    itemSelectText: '',  // This hides the "press to select" label
+    classNames: {
+        containerOuter: 'choices custom-choices'
+    }
 });
+
 
     // Automatically populate end date based on start date
     document.getElementById('startDate').addEventListener('change', function () {
